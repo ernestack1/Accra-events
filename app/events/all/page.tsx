@@ -1,10 +1,10 @@
 
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 
-export default function AllEventsPage() {
+function AllEventsContent() {
   const [events, setEvents] = useState<any[]>([]);
   const searchParams = useSearchParams();
   const filter = searchParams.get("filter");
@@ -156,5 +156,12 @@ export default function AllEventsPage() {
         </div>
       )}
     </main>
+  );
+}
+export default function AllEventsPage() {
+  return (
+    <Suspense fallback={<div>Loading events...</div>}>
+      <AllEventsContent />
+    </Suspense>
   );
 }
