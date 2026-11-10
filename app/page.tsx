@@ -151,7 +151,7 @@ const promotedEvents = adminEvents.filter(
   (event: any) => event.is_featured === true
 );
 const todayEvents = adminEvents.filter(
-  (event) => event.date === todayKey
+  (event: any) => (event.event_date ?? event.date) === todayKey
 );
 
 const thisWeekendEvents = adminEvents.filter((event) => {
@@ -384,7 +384,7 @@ if (
     SEP: "09", OCT: "10", NOV: "11", DEC: "12",
   };
 
-  const rawDate = String(event.date ?? "").trim();
+  const rawDate = String(event.event_date ?? event.date ?? "").trim();
   let formattedDate = "";
 
   if (/^\d{4}-\d{2}-\d{2}$/.test(rawDate)) {
@@ -506,7 +506,16 @@ if (
               <div className="upcoming-grid">
 
             {upcomingDatabaseEvents
-  .filter((event: any) => !selectedCategory || event.category === selectedCategory)
+  .filter((event: any) => {
+    const matchesDate =
+      !selectedDate ||
+      String(event.event_date ?? event.date ?? "").slice(0, 10) === selectedDate;
+
+    const matchesCategory =
+      !selectedCategory || event.category === selectedCategory;
+
+    return matchesDate && matchesCategory;
+  })
   .map((event: any) => (                 <article
   className="small-event-card"
   key={event.id}
