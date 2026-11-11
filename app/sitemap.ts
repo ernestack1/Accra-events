@@ -9,7 +9,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .select("slug, updated_at, published")
     .eq("published", true);
 
-  const eventPages = (events || []).map((event) => ({
+  const excludedSlugs = new Set([
+  "accra-events-upload-test",
+  "accraevents-save-test",
+  "accraevents-featured-test",
+  "chale-night",
+  "upsa-src",
+  "accra-comedy-night",
+]);
+
+const eventPages = (events || [])
+  .filter((event) => !excludedSlugs.has(event.slug))
+  .map((event) => ({
     url: `${baseUrl}/events/${event.slug}`,
     lastModified: event.updated_at
       ? new Date(event.updated_at)
