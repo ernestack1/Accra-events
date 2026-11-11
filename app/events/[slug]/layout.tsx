@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
   }
 
-  const title = `${event.title} | Events in Accra`;
+  const title = event.title;
   const description =
     event.description ||
     `Discover ${event.title} happening in ${event.location || "Accra, Ghana"}. Find event details on Events in Accra.`;
