@@ -6,7 +6,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const { data: events } = await supabase
     .from("events")
-    .select("slug, updated_at, published")
+    .select("slug, created_at, published")
     .eq("published", true);
 
   const excludedSlugs = new Set([
@@ -22,8 +22,8 @@ const eventPages = (events || [])
   .filter((event) => !excludedSlugs.has(event.slug))
   .map((event) => ({
     url: `${baseUrl}/events/${event.slug}`,
-    lastModified: event.updated_at
-      ? new Date(event.updated_at)
+    lastModified: event.created_at
+      ? new Date(event.created_at)
       : new Date(),
   }));
 
