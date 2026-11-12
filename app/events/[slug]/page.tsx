@@ -94,6 +94,25 @@ if (!event) {
         fontFamily: "Arial, sans-serif",
       }}
     >
+      <script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Event",
+      name: event.title,
+      description: event.description,
+      image: event.image ? [event.image] : [],
+      startDate: event.event_date || event.date,
+      location: {
+        "@type": "Place",
+        name: event.location,
+        address: event.location,
+      },
+      url: `https://eventsinaccra.com/events/${slug}`,
+    }),
+  }}
+/>
       <header
   style={{
     height: "72px",
