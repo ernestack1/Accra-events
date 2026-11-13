@@ -97,16 +97,19 @@ async function handleAdminLogin() {
   const [eventVenue, setEventVenue] = useState("");
   const [eventImage, setEventImage] = useState("");
   const [isFeatured, setIsFeatured] = useState(false);
-  const [ticketTypes, setTicketTypes] = useState<TicketType[]>([
+ const [ticketTypes, setTicketTypes] = useState<TicketType[]>([
   {
-    name: "Regular",
+    name: "",
     price: "",
     available: "",
   },
 ]);
   const [ticketLink, setTicketLink] = useState("");
-  const [ticketMode, setTicketMode] = useState<
-  "free" | "internal" | "external"
+ const [ticketUssd, setTicketUssd] = useState("");
+const [ticketPhone, setTicketPhone] = useState("");
+const [ticketWhatsapp, setTicketWhatsapp] = useState("");
+ const [ticketMode, setTicketMode] = useState<
+  "free" | "internal" | "external" | "ussd" | "phone" | "whatsapp"
 >("internal");
   const [eventDescription, setEventDescription] = useState("");
 const [editingEventId, setEditingEventId] = useState<string | null>(null);
@@ -124,7 +127,7 @@ async function handleSaveEvent() {
     .replace(/^-|-$/g, "");
 
   const validTickets =
-    ticketMode === "internal"
+    ticketMode !== "free"
       ? ticketTypes
           .filter(
             (ticket) =>
@@ -185,6 +188,9 @@ async function handleSaveEvent() {
         image: eventImage,
         ticket_mode: ticketMode,
         ticket_link: ticketLink,
+        ticket_ussd: ticketUssd,
+        ticket_phone: ticketPhone,
+        ticket_whatsapp: ticketWhatsapp,
         ticket_types: validTickets,
         is_featured: isFeatured,
       }),
@@ -752,17 +758,20 @@ alert("Flyer uploaded successfully!");
     value={ticketMode}
     onChange={(e) =>
       setTicketMode(
-        e.target.value as "free" | "internal" | "external"
+        e.target.value as "free" | "internal" | "external" | "ussd" | "phone" | "whatsapp"
       )
     }
     style={inputStyle}
   >
-    <option value="free">Free Event</option>
-    <option value="internal">Sell tickets on AccraEvents</option>
-    <option value="external">Use external ticket link</option>
+   <option value="free">Free Event</option>
+<option value="internal">Sell tickets on AccraEvents</option>
+<option value="external">Use external ticket link</option>
+<option value="ussd">Purchase via USSD Code</option>
+<option value="phone">Purchase via Phone Call</option>
+<option value="whatsapp">Purchase via WhatsApp</option>
   </select>
 
-  {ticketMode === "external" && (
+  {(ticketMode === "external" || ticketMode === "free") && (
     <div style={{ marginTop: "15px" }}>
       <label
         style={{
@@ -788,12 +797,40 @@ alert("Flyer uploaded successfully!");
           marginTop: "8px",
         }}
       >
-        Visitors will be taken to this official ticket website
-        when they click Buy Tickets.
+        {ticketMode === "free"
+  ? "Add a registration link if visitors need to register. Leave it blank for free-entry events."
+  : "Visitors will be taken to this official ticket website when they click Buy Tickets."}
       </p>
     </div>
   )}
-
+{(ticketMode === "internal" || ticketMode === "ussd" || ticketMode === "phone" || ticketMode === "whatsapp") && (
+  <div style={{ marginTop: "15px" }}>
+    <label style={{ display: "block", fontWeight: "700", marginBottom: "8px" }}>
+      Ticket Payment Contact Details
+    </label>
+{(ticketMode === "internal" || ticketMode === "ussd") && (
+    <input
+      value={ticketUssd}
+      onChange={(e) => setTicketUssd(e.target.value)}
+      placeholder="USSD code (e.g. *170#)"
+      style={inputStyle}
+    />)}
+{(ticketMode === "internal" || ticketMode === "phone") && (
+    <input
+      value={ticketPhone}
+      onChange={(e) => setTicketPhone(e.target.value)}
+      placeholder="Payment phone number"
+      style={{ ...inputStyle, marginTop: "10px" }}
+    />)}
+{(ticketMode === "internal" || ticketMode === "whatsapp") && (
+    <input
+      value={ticketWhatsapp}
+      onChange={(e) => setTicketWhatsapp(e.target.value)}
+      placeholder="WhatsApp number"
+      style={{ ...inputStyle, marginTop: "10px" }}
+    />)}
+  </div>
+)}
   {ticketMode === "internal" && (
     <p
       style={{
@@ -917,6 +954,9 @@ alert("Flyer uploaded successfully!");
     setEventDescription(event.description || "");
     setTicketMode(event.ticketMode || "internal");
     setTicketLink(event.ticketLink || "");
+    setTicketUssd(event.ticket_ussd || "");
+setTicketPhone(event.ticket_phone || "");
+setTicketWhatsapp(event.ticket_whatsapp || "");
     setActiveView("add-event");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }}

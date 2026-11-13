@@ -19,6 +19,9 @@ export async function GET() {
       image,
       ticket_mode,
       ticket_link,
+      ticket_ussd,
+      ticket_phone,
+      ticket_whatsapp,
       published,
       is_featured,
       ticket_types (
@@ -77,6 +80,9 @@ if (user.email !== "ernestackom2@gmail.com") {
       image,
       ticket_mode,
       ticket_link,
+      ticket_ussd,
+      ticket_phone,
+      ticket_whatsapp,
       ticket_types,
       is_featured
     } = body;
@@ -101,6 +107,9 @@ if (user.email !== "ernestackom2@gmail.com") {
         image,
         ticket_mode,
         ticket_link,
+        ticket_ussd,
+        ticket_phone,
+        ticket_whatsapp,
         published: true,
         is_featured: is_featured ?? false,
       })
@@ -176,6 +185,9 @@ export async function PATCH(request: Request) {
       image,
       ticket_mode,
       ticket_link,
+      ticket_ussd,
+      ticket_phone,
+      ticket_whatsapp,
       is_featured,
       published,
     } = body;
@@ -200,6 +212,9 @@ export async function PATCH(request: Request) {
         image,
         ticket_mode,
         ticket_link,
+        ticket_ussd,
+        ticket_phone,
+        ticket_whatsapp,
         is_featured: is_featured ?? false,
         ...(published !== undefined ? { published } : {}),
       })

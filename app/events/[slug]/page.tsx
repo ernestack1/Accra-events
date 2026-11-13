@@ -42,6 +42,9 @@ const [isLoading, setIsLoading] = useState(true);
         ...foundEvent,
         ticketMode: foundEvent.ticketMode ?? foundEvent.ticket_mode,
         ticketLink: foundEvent.ticketLink ?? foundEvent.ticket_link,
+        ticketUssd: foundEvent.ticketUssd ?? foundEvent.ticket_ussd,
+ticketPhone: foundEvent.ticketPhone ?? foundEvent.ticket_phone,
+ticketWhatsapp: foundEvent.ticketWhatsapp ?? foundEvent.ticket_whatsapp,
         date: foundEvent.date ?? foundEvent.event_date,
         time: foundEvent.time ?? foundEvent.event_time,
       }
@@ -172,59 +175,7 @@ if (!event) {
       whiteSpace: "nowrap",
     }}
   >
-    <button
-      style={{
-        background: "transparent",
-        border: "none",
-        color: "white",
-        fontSize: "20px",
-        cursor: "pointer",
-      }}
-    >
-      ♡
-    </button>
 
-    <a
-      href="/"
-      style={{
-        color: "white",
-        textDecoration: "none",
-        padding: "10px 16px",
-        border: "1px solid rgba(255,255,255,0.35)",
-        borderRadius: "9px",
-        fontWeight: "600",
-      }}
-    >
-      My Events
-    </a>
-
-    <a
-      href="/"
-      style={{
-        color: "white",
-        textDecoration: "none",
-        padding: "10px 16px",
-        border: "1px solid rgba(255,255,255,0.35)",
-        borderRadius: "9px",
-        fontWeight: "600",
-      }}
-    >
-      Login
-    </a>
-
-    <a
-      href="/"
-      style={{
-        background: "#ff0080",
-        color: "white",
-        textDecoration: "none",
-        padding: "11px 18px",
-        borderRadius: "9px",
-        fontWeight: "700",
-      }}
-    >
-      Sign Up
-    </a>
   </div>
 </header>
 
@@ -341,7 +292,7 @@ if (!event) {
       marginTop: "10px",
     }}
   >
-    {(event as any).ticketTypes?.map((ticket: any) => (
+    {(event as any).ticket_types?.map((ticket: any) => (
       <div
         key={ticket.name}
         style={{
@@ -398,26 +349,120 @@ if (!event) {
                   📅 Add to Calendar
                 </button>
 
-                <button
-                onClick={() => {
-  if (event.ticketMode === "external" && event.ticketLink) {
-    window.location.href = event.ticketLink;
-  } else if (event.ticketMode === "internal") {
-    window.location.href = `/events/${slug}/tickets`;
-  }
+             {event.ticketMode === "free" ? (
+  event.ticketLink ? (
+    <button
+      onClick={() => {
+        window.location.href = event.ticketLink;
+      }}
+      style={{
+        border: "none",
+        background: "#ff0080",
+        color: "white",
+        padding: "14px 28px",
+        borderRadius: "10px",
+        fontWeight: "700",
+        cursor: "pointer",
+      }}
+    >
+      Register for Free
+    </button>
+  ) : (
+    <span style={{ fontWeight: "700", color: "#16a34a" }}>
+      Free Entry
+    </span>
+  )
+) : event.ticketMode === "ussd" ? (
+  <button
+    onClick={() => {
+      window.location.href = `tel:${event.ticketUssd?.replace(/#/g, "%23")}`;
+    }}
+    style={{
+      border: "none",
+      background: "#ff0080",
+      color: "white",
+      padding: "14px 28px",
+      borderRadius: "10px",
+      fontWeight: "700",
+      cursor: "pointer",
+    }}
+  >
+    Dial USSD Code: {event.ticketUssd}
+  </button>
+) : event.ticketMode === "phone" ? (
+  <button
+    onClick={() => {
+      window.location.href = `tel:${event.ticketPhone}`;
+    }}
+    style={{
+      border: "none",
+      background: "#ff0080",
+      color: "white",
+      padding: "14px 28px",
+      borderRadius: "10px",
+      fontWeight: "700",
+      cursor: "pointer",
+    }}
+  >
+    Call to Purchase: {event.ticketPhone}
+  </button>
+) : event.ticketMode === "whatsapp" ? (
+  <button
+    onClick={() => {
+      window.open(
+        `https://wa.me/${event.ticketWhatsapp?.replace(/\D/g, "")}`,
+        "_blank"
+      );
+    }}
+    style={{
+  border: "none",
+  background: "#25D366",
+  color: "white",
+  padding: "14px 28px",
+  borderRadius: "10px",
+  fontWeight: "700",
+  cursor: "pointer",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  whiteSpace: "nowrap",
+  minWidth: "270px",
+  gap: "6px",
 }}
-                  style={{
-                    border: "none",
-                    background: "#ff0080",
-                    color: "white",
-                    padding: "14px 28px",
-                    borderRadius: "10px",
-                    fontWeight: "700",
-                    cursor: "pointer",
-                  }}
-                >
-                  Buy Tickets
-                </button>
+  >
+    Get Tickets on{" "}
+<img
+  src="https://cdn.simpleicons.org/whatsapp/FFFFFF"
+  alt="WhatsApp"
+  width="20"
+  height="20"
+  style={{ verticalAlign: "middle", marginLeft: "5px" }}
+/>
+{" "}
+{event.ticketWhatsapp}
+  </button>
+) : (
+  <button
+    onClick={() => {
+      if (event.ticketMode === "external" && event.ticketLink) {
+        window.location.href = event.ticketLink;
+      } else if (event.ticketMode === "internal") {
+        window.location.href = `/events/${slug}/tickets`;
+      }
+    }}
+    style={{
+      border: "none",
+      background: "#ff0080",
+      color: "white",
+      padding: "14px 28px",
+      borderRadius: "10px",
+      fontWeight: "700",
+      cursor: "pointer",
+    }}
+  >
+    Buy Tickets
+  </button>
+)}
               </div>
             </div>
           </div>

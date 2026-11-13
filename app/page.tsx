@@ -306,7 +306,11 @@ ticket_mode: event.ticket_mode,
             <div
   className={`category ${selectedCategory === category.name ? "selected" : ""}`}
   key={category.name}
-  onClick={() => setSelectedCategory(category.name)}
+  onClick={() =>
+  setSelectedCategory(
+    selectedCategory === category.name ? "" : category.name
+  )
+}
   style={{ cursor: "pointer" }}
 >
               <div className={`category-circle ${category.colour}`}>
@@ -595,6 +599,51 @@ if (
 
                   </article>
                 ))}
+
+
+{upcomingDatabaseEvents.filter((event: any) => {
+  const matchesDate =
+    !selectedDate ||
+    String(event.event_date ?? event.date ?? "").slice(0, 10) === selectedDate;
+
+  const matchesCategory =
+    !selectedCategory || event.category === selectedCategory;
+
+  return matchesDate && matchesCategory;
+}).length === 0 && (
+  <div
+    style={{
+      gridColumn: "1 / -1",
+      textAlign: "center",
+      padding: "45px 20px",
+    }}
+  >
+    <h3>No Events Found</h3>
+    <p>
+      There are no events in this category at the moment.
+      Check back soon for new events in Accra.
+    </p>
+    <button
+      onClick={() => {
+        setSelectedCategory("");
+        setSelectedDate("");
+      }}
+      style={{
+        marginTop: "15px",
+        padding: "12px 24px",
+        border: "none",
+        borderRadius: "8px",
+        background: "#ff0080",
+        color: "#fff",
+        fontWeight: "700",
+        cursor: "pointer",
+      }}
+    >
+      Explore All Events
+    </button>
+  </div>
+)}
+
 
               </div>
 
