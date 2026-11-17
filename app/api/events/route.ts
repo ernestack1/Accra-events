@@ -188,6 +188,7 @@ export async function PATCH(request: Request) {
       ticket_ussd,
       ticket_phone,
       ticket_whatsapp,
+      ticket_types,
       is_featured,
       published,
     } = body;

@@ -518,7 +518,14 @@ if (
     const matchesCategory =
       !selectedCategory || event.category === selectedCategory;
 
-    return matchesDate && matchesCategory;
+    const query = searchQuery.trim().toLowerCase();
+
+const matchesSearch =
+  !query ||
+  String(event.title ?? "").toLowerCase().includes(query) ||
+  String(event.location ?? "").toLowerCase().includes(query);
+
+return matchesDate && matchesCategory && matchesSearch;
   })
   .map((event: any) => (                 <article
   className="small-event-card"

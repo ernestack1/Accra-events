@@ -957,6 +957,13 @@ alert("Flyer uploaded successfully!");
     setTicketUssd(event.ticket_ussd || "");
 setTicketPhone(event.ticket_phone || "");
 setTicketWhatsapp(event.ticket_whatsapp || "");
+setTicketTypes(
+  (event.ticket_types || []).map((ticket: any) => ({
+    name: ticket.name || "",
+    price: String(ticket.price ?? ""),
+    available: String(ticket.total_quantity ?? ""),
+  }))
+);
     setActiveView("add-event");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }}
